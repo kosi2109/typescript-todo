@@ -4,25 +4,6 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
-function useOutsideAlerter(ref: any, setEdit: any , editTodo : any) {
-  useEffect(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        editTodo();
-        setEdit(false);
-      }
-    }
-    // Bind the event listener
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref]);
-}
 
 interface Props {
   todo: TODO;
@@ -33,7 +14,6 @@ interface Props {
 const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [text, setText] = useState<string>(todo.todo);
-  const formRef = useRef<any>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -66,11 +46,11 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
     setTodos(todos.filter((t) => t.id !== todo.id));
   };
 
-  useOutsideAlerter(formRef, setEdit , editTodo);
+
 
   
   return (
-    <div key={todo.id} data-testid="todo-item" className="todo" ref={formRef}>
+    <div key={todo.id} data-testid="todo-item" className="todo">
       <div className="todoText">
         {edit ? (
           <form data-testid='edit-form' className="editForm" onSubmit={(e)=> {e.preventDefault();editTodo()}}>
